@@ -2,6 +2,12 @@
 collection of pyTorch network structure
 
 
+# group_clsgat_parallel
+ 	hierarchical | GAT | group_conv | residual 
+https://blog.csdn.net/weixin_36474809/article/details/90376883
+
+
+
 # senet_origin.py
 
 https://blog.csdn.net/weixin_36474809/article/details/89715056
