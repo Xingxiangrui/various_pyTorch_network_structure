@@ -5,6 +5,7 @@ https://github.com/pytorch/vision/blob/master/torchvision/models/resnet.py
 from __future__ import print_function, division, absolute_import
 from collections import OrderedDict
 import math
+import torch
 
 import torch.nn as nn
 from torch.utils import model_zoo
@@ -282,7 +283,7 @@ class SENet(nn.Module):
         # is used instead of `padding=1`.
         layer0_modules.append(('pool', nn.MaxPool2d(3, stride=2,
                                                     ceil_mode=True)))
-        self.se = nn.Sequential(OrderedDict(layer0_modules))
+        self.layer0 = nn.Sequential(OrderedDict(layer0_modules))
         self.layer1 = self._make_layer(
             block,
             planes=64,
@@ -374,13 +375,14 @@ def initialize_pretrained_model(model, num_classes, settings):
     assert num_classes == settings['num_classes'], \
         'num_classes should be {}, but is {}'.format(
             settings['num_classes'], num_classes)
-    model.load_state_dict(model_zoo.load_url(settings['url']))
+    # model.load_state_dict(model_zoo.load_url(settings['url']))
+    print('loading pretrained model from local...')
+    model.load_state_dict(torch.load('./se_resnet152-d17c99b7.pth'))
     model.input_space = settings['input_space']
     model.input_size = settings['input_size']
     model.input_range = settings['input_range']
     model.mean = settings['mean']
     model.std = settings['std']
-
 
 def senet154(num_classes=1000, pretrained='imagenet'):
     model = SENet(SEBottleneck, [3, 8, 36, 3], groups=64, reduction=16,
